@@ -1,0 +1,39 @@
+version: '2.1'
+
+services:
+  next:
+    build: .
+    restart: unless-stopped
+    environment:
+      - NEXTAUTH_SECRET=...
+      - NEXTAUTH_URL=https://pecheck.lachouettecoop.fr
+      - ADMIN_CHOUETTOS_URL=https://adminchouettos.lachouettecoop.fr
+      - DB_ADMIN_HOST=db_adminchouettos
+      - DB_ADMIN_PORT=3306
+      - DB_ADMIN_DB_NAME=...
+      - DB_ADMIN_USER=...
+      - DB_ADMIN_PASSWORD=...
+      - DB_ENJOLRAS_HOST=db_enjolras
+      - DB_ENJOLRAS_PORT=3306
+      - DB_ENJOLRAS_DB_NAME=...
+      - DB_ENJOLRAS_USER=...
+      - DB_ENJOLRAS_PASSWORD=...
+    networks:
+      default:
+      inverseproxy_shared:
+    labels:
+      traefik.docker.network: "inverseproxy_shared"
+      traefik.enable: "true"
+      traefik.frontend.passHostHeader: "true"
+      traefik.port: "3000"
+      traefik.www.frontend.rule: "Host:pecheck.lachouettecoop.fr"
+
+networks:
+    default:
+      internal: true
+      driver_opts:
+        encrypted: 1
+    metabase_shared:
+      external: true
+    inverseproxy_shared:
+      external: true
